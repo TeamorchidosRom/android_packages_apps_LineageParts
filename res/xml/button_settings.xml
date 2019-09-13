@@ -270,12 +270,6 @@
             android:defaultValue="false" />
 
         <lineageos.preference.LineageSystemSettingSwitchPreference
-            android:key="volbtn_music_controls"
-            android:title="@string/volbtn_music_controls_title"
-            android:summary="@string/volbtn_music_controls_summary"
-            android:defaultValue="true" />
-
-        <lineageos.preference.LineageSystemSettingSwitchPreference
             android:key="volume_keys_control_ring_stream"
             android:title="@string/volume_keys_control_ring_stream_title"
             android:summaryOn="@string/volume_keys_control_ring_stream_summary_on"
