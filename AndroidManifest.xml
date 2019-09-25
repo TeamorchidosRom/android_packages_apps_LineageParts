@@ -101,7 +101,7 @@
             </intent-filter>
         </provider>
 
-        <!-- Button settings (System category) -->
+        <!-- Button settings (System category) 
         <activity-alias
             android:name=".input.ButtonSettings"
             android:label="@string/button_pref_title"
@@ -121,7 +121,7 @@
             <meta-data
                 android:name="com.android.settings.summary"
                 android:resource="@string/summary_empty" />
-        </activity-alias>
+        </activity-alias> -->
 
         <activity android:name=".gestures.KeyHandler" />
 
