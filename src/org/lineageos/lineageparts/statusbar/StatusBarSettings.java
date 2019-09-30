@@ -48,11 +48,8 @@ public class StatusBarSettings extends SettingsPreferenceFragment
 
     private static final String STATUS_BAR_CLOCK_STYLE = "status_bar_clock";
     private static final String STATUS_BAR_AM_PM = "status_bar_am_pm";
-    private static final String STATUS_BAR_BATTERY_STYLE = "status_bar_battery_style";
-    private static final String STATUS_BAR_SHOW_BATTERY_PERCENT = "status_bar_show_battery_percent";
     private static final String STATUS_BAR_QUICK_QS_PULLDOWN = "qs_quick_pulldown";
 
-    private static final int STATUS_BAR_BATTERY_STYLE_TEXT = 2;
 
     private static final int PULLDOWN_DIR_NONE = 0;
     private static final int PULLDOWN_DIR_RIGHT = 1;
@@ -62,7 +59,6 @@ public class StatusBarSettings extends SettingsPreferenceFragment
     private LineageSystemSettingListPreference mStatusBarClock;
     private LineageSystemSettingListPreference mStatusBarAmPm;
     private LineageSystemSettingListPreference mStatusBarBattery;
-    private LineageSystemSettingListPreference mStatusBarBatteryShowPercent;
 
     private PreferenceCategory mStatusBarBatteryCategory;
     private PreferenceCategory mStatusBarClockCategory;
@@ -86,12 +82,7 @@ public class StatusBarSettings extends SettingsPreferenceFragment
         mStatusBarClockCategory =
                 (PreferenceCategory) getPreferenceScreen().findPreference(CATEGORY_CLOCK);
 
-        mStatusBarBatteryShowPercent =
-                (LineageSystemSettingListPreference) findPreference(STATUS_BAR_SHOW_BATTERY_PERCENT);
-        mStatusBarBattery =
-                (LineageSystemSettingListPreference) findPreference(STATUS_BAR_BATTERY_STYLE);
         mStatusBarBattery.setOnPreferenceChangeListener(this);
-        enableStatusBarBatteryDependents(mStatusBarBattery.getIntValue(2));
 
         mStatusBarBatteryCategory =
                 (PreferenceCategory) getPreferenceScreen().findPreference(CATEGORY_BATTERY);
@@ -157,17 +148,8 @@ public class StatusBarSettings extends SettingsPreferenceFragment
             case STATUS_BAR_QUICK_QS_PULLDOWN:
                 updateQuickPulldownSummary(value);
                 break;
-            case STATUS_BAR_CLOCK_STYLE:
-                break;
-            case STATUS_BAR_BATTERY_STYLE:
-                enableStatusBarBatteryDependents(value);
-                break;
         }
         return true;
-    }
-
-    private void enableStatusBarBatteryDependents(int batteryIconStyle) {
-        mStatusBarBatteryShowPercent.setEnabled(batteryIconStyle != STATUS_BAR_BATTERY_STYLE_TEXT);
     }
 
     private void updateQuickPulldownSummary(int value) {
