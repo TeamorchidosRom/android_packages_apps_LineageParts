@@ -21,10 +21,6 @@ import android.content.res.Resources;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-/**
- * Helper class which has the same logic as MobileNetworkSettings to display the same
- * network modes and strings as it does.
- */
 public class TelephonyUtils {
 
     private static final String TAG = TelephonyUtils.class.getSimpleName();

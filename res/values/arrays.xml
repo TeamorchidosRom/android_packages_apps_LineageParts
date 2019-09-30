@@ -268,21 +268,25 @@
 
     <string-array name="status_bar_battery_style_entries" translatable="false">
         <item>@string/status_bar_battery_style_icon_portrait</item>
-        <item>@string/status_bar_battery_style_icon_landscape</item>
+        <item>@string/status_bar_battery_style_circle</item>
+        <item>@string/status_bar_battery_style_text</item>
     </string-array>
 
     <string-array name="status_bar_battery_style_values" translatable="false">
         <item>0</item>
-        <item>5</item>
+        <item>1</item>
+        <item>2</item>
     </string-array>
 
     <string-array name="status_bar_battery_percentage_entries" translatable="false">
-        <item>@string/status_bar_battery_percentage_off</item>
-        <item>@string/status_bar_battery_percentage_on</item>
+        <item>@string/status_bar_battery_percentage_default</item>
+        <item>@string/status_bar_battery_percentage_text_inside</item>
+        <item>@string/status_bar_battery_percentage_text_next</item>
     </string-array>
 
     <string-array name="status_bar_battery_percentage_values" translatable="false">
         <item>0</item>
+        <item>1</item>
         <item>2</item>
     </string-array>
 
@@ -309,6 +313,17 @@
         <item>2</item>
         <item>1</item>
         <item>0</item>
+    </string-array>
+
+    <!-- Weather temperature -->
+    <string-array name="weather_temp_unit_entries" translatable="false">
+        <item>@string/weather_settings_temp_celsius</item>
+        <item>@string/weather_settings_temp_fahrenheit</item>
+    </string-array>
+
+    <string-array name="weather_temp_unit_values" translatable="false">
+        <item>1</item>
+        <item>2</item>
     </string-array>
 
     <!-- Auto power save mode: Allowable trigger threshold entries -->
@@ -386,6 +401,35 @@
         <item>120</item>
         <item>300</item>
         <item>600</item>
+    </string-array>
+
+    <!-- Network Traffic -->
+    <string-array name="network_traffic_mode_entries" translatable="false">
+        <item>@string/network_traffic_mode_disable</item>
+        <item>@string/network_traffic_mode_up</item>
+        <item>@string/network_traffic_mode_down</item>
+        <item>@string/network_traffic_mode_all</item>
+    </string-array>
+
+    <string-array name="network_traffic_mode_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="network_traffic_units_entries" translatable="false">
+        <item>@string/network_traffic_units_kilobits</item>
+        <item>@string/network_traffic_units_megabits</item>
+        <item>@string/network_traffic_units_kilobytes</item>
+        <item>@string/network_traffic_units_megabytes</item>
+    </string-array>
+
+    <string-array name="network_traffic_units_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
     </string-array>
 
     <string-array name="style_entries" translatable="false">

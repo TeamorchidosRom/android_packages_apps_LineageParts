@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2016 The CyanogenMod project
- * Copyright (C) 2017 The LineageOS project
+ * Copyright (C) 2017-2018 The LineageOS project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
+import android.os.UserHandle;
 import android.provider.Settings;
 import android.support.v14.preference.SwitchPreference;
 import android.support.v7.preference.ListPreference;
@@ -70,6 +71,7 @@ public class ButtonSettings extends SettingsPreferenceFragment implements
     private static final String KEY_APP_SWITCH_LONG_PRESS = "hardware_keys_app_switch_long_press";
     private static final String KEY_VOLUME_KEY_CURSOR_CONTROL = "volume_key_cursor_control";
     private static final String KEY_SWAP_VOLUME_BUTTONS = "swap_volume_buttons";
+    private static final String KEY_VOLUME_PANEL_ON_LEFT = "volume_panel_on_left";
     private static final String DISABLE_NAV_KEYS = "disable_nav_keys";
     private static final String KEY_NAVIGATION_HOME_LONG_PRESS = "navigation_home_long_press";
     private static final String KEY_NAVIGATION_HOME_DOUBLE_TAP = "navigation_home_double_tap";
@@ -77,7 +79,7 @@ public class ButtonSettings extends SettingsPreferenceFragment implements
             "navigation_app_switch_long_press";
     private static final String KEY_POWER_END_CALL = "power_end_call";
     private static final String KEY_HOME_ANSWER_CALL = "home_answer_call";
-    private static final String KEY_VOLUME_CONTROL_RING_STREAM = "volume_keys_control_ring_stream";
+    private static final String KEY_VOLUME_MUSIC_CONTROLS = "volbtn_music_controls";
     private static final String KEY_TORCH_LONG_PRESS_POWER_GESTURE =
             "torch_long_press_power_gesture";
     private static final String KEY_TORCH_LONG_PRESS_POWER_TIMEOUT =
@@ -107,7 +109,9 @@ public class ButtonSettings extends SettingsPreferenceFragment implements
     private SwitchPreference mCameraLaunch;
     private ListPreference mVolumeKeyCursorControl;
     private SwitchPreference mVolumeWakeScreen;
+    private SwitchPreference mVolumeMusicControls;
     private SwitchPreference mSwapVolumeButtons;
+    private SwitchPreference mVolumePanelOnLeft;
     private SwitchPreference mDisableNavigationKeys;
     private ListPreference mNavigationHomeLongPressAction;
     private ListPreference mNavigationHomeDoubleTapAction;
@@ -222,24 +226,20 @@ public class ButtonSettings extends SettingsPreferenceFragment implements
 
         final LineageHardwareManager hardware = LineageHardwareManager.getInstance(getActivity());
 
-        // Only visible on devices that does not have a navigation bar already,
-        // and don't even try unless the existing keys can be disabled
-        boolean needsNavigationBar = false;
-        if (hardware.isSupported(LineageHardwareManager.FEATURE_KEY_DISABLE)) {
-            try {
-                IWindowManager wm = WindowManagerGlobal.getWindowManagerService();
-                needsNavigationBar = wm.needsNavigationBar();
-            } catch (RemoteException e) {
-            }
-
-            if (needsNavigationBar) {
-                prefScreen.removePreference(mDisableNavigationKeys);
-            } else {
-                // Remove keys that can be provided by the navbar
-                updateDisableNavkeysOption();
-                mNavigationPreferencesCat.setEnabled(mDisableNavigationKeys.isChecked());
-                updateDisableNavkeysCategories(mDisableNavigationKeys.isChecked());
-            }
+        // Only visible on devices that does not have a navigation bar already
+        boolean hasNavigationBar = true;
+        boolean supportsKeyDisabler = isKeyDisablerSupported(getActivity());
+        try {
+            IWindowManager windowManager = WindowManagerGlobal.getWindowManagerService();
+            hasNavigationBar = windowManager.hasNavigationBar();
+        } catch (RemoteException e) {
+            Log.e(TAG, "Error getting navigation bar status");
+        }
+        if (supportsKeyDisabler) {
+            // Remove keys that can be provided by the navbar
+            updateDisableNavkeysOption();
+            mNavigationPreferencesCat.setEnabled(mDisableNavigationKeys.isChecked());
+            updateDisableNavkeysCategories(mDisableNavigationKeys.isChecked());
         } else {
             prefScreen.removePreference(mDisableNavigationKeys);
         }
@@ -381,25 +381,23 @@ public class ButtonSettings extends SettingsPreferenceFragment implements
             if (mSwapVolumeButtons != null) {
                 mSwapVolumeButtons.setChecked(swapVolumeKeys > 0);
             }
+
+            final boolean volumePanelOnLeft = LineageSettings.Secure.getIntForUser(
+                    getContentResolver(), LineageSettings.Secure.VOLUME_PANEL_ON_LEFT, 0,
+                    UserHandle.USER_CURRENT) != 0;
+            mVolumePanelOnLeft = (SwitchPreference)
+                    prefScreen.findPreference(KEY_VOLUME_PANEL_ON_LEFT);
+            if (mVolumePanelOnLeft != null) {
+                mVolumePanelOnLeft.setChecked(volumePanelOnLeft);
+            }
         } else {
             prefScreen.removePreference(volumeCategory);
         }
 
-        try {
-            // Only show the navigation bar category on devices that have a navigation bar
-            // unless we are forcing it via development settings
-            boolean forceNavbar = LineageSettings.Global.getInt(getContentResolver(),
-                    LineageSettings.Global.DEV_FORCE_SHOW_NAVBAR, 0) == 1;
-            boolean hasNavBar = WindowManagerGlobal.getWindowManagerService().hasNavigationBar()
-                    || forceNavbar;
-
-            if (!hasNavBar && (needsNavigationBar ||
-                    !hardware.isSupported(LineageHardwareManager.FEATURE_KEY_DISABLE))) {
-                    // Hide navigation bar category
-                    prefScreen.removePreference(mNavigationPreferencesCat);
-            }
-        } catch (RemoteException e) {
-            Log.e(TAG, "Error getting navigation bar status");
+        // Only show the navigation bar category on devices that have a navigation bar
+        // or support disabling the hardware keys
+        if (!hasNavigationBar && !supportsKeyDisabler) {
+            prefScreen.removePreference(mNavigationPreferencesCat);
         }
 
         final ButtonBacklightBrightness backlight =
@@ -416,6 +414,14 @@ public class ButtonSettings extends SettingsPreferenceFragment implements
         }
 
         mVolumeWakeScreen = (SwitchPreference) findPreference(LineageSettings.System.VOLUME_WAKE_SCREEN);
+        mVolumeMusicControls = (SwitchPreference) findPreference(KEY_VOLUME_MUSIC_CONTROLS);
+
+        if (mVolumeWakeScreen != null) {
+            if (mVolumeMusicControls != null) {
+                mVolumeMusicControls.setDependency(LineageSettings.System.VOLUME_WAKE_SCREEN);
+                mVolumeWakeScreen.setDisableDependentsState(true);
+            }
+        }
 
         // Override key actions on Go devices in order to hide any unsupported features
         if (ActivityManager.isLowRamDeviceStatic()) {
@@ -567,13 +573,13 @@ public class ButtonSettings extends SettingsPreferenceFragment implements
     }
 
     private static void writeDisableNavkeysOption(Context context, boolean enabled) {
-        LineageSettings.Global.putInt(context.getContentResolver(),
-                LineageSettings.Global.DEV_FORCE_SHOW_NAVBAR, enabled ? 1 : 0);
+        LineageSettings.System.putIntForUser(context.getContentResolver(),
+                LineageSettings.System.FORCE_SHOW_NAVBAR, enabled ? 1 : 0, UserHandle.USER_CURRENT);
     }
 
     private void updateDisableNavkeysOption() {
-        boolean enabled = LineageSettings.Global.getInt(getActivity().getContentResolver(),
-                LineageSettings.Global.DEV_FORCE_SHOW_NAVBAR, 0) != 0;
+        boolean enabled = LineageSettings.System.getIntForUser(getActivity().getContentResolver(),
+                LineageSettings.System.FORCE_SHOW_NAVBAR, 0, UserHandle.USER_CURRENT) != 0;
 
         mDisableNavigationKeys.setChecked(enabled);
     }
@@ -639,14 +645,20 @@ public class ButtonSettings extends SettingsPreferenceFragment implements
         }
     }
 
+    private static boolean isKeyDisablerSupported(Context context) {
+        final LineageHardwareManager hardware = LineageHardwareManager.getInstance(context);
+        return hardware.isSupported(LineageHardwareManager.FEATURE_KEY_DISABLE);
+    }
+
     public static void restoreKeyDisabler(Context context) {
-        LineageHardwareManager hardware = LineageHardwareManager.getInstance(context);
-        if (!hardware.isSupported(LineageHardwareManager.FEATURE_KEY_DISABLE)) {
+        if (!isKeyDisablerSupported(context)) {
             return;
         }
 
-        writeDisableNavkeysOption(context, LineageSettings.Global.getInt(context.getContentResolver(),
-                LineageSettings.Global.DEV_FORCE_SHOW_NAVBAR, 0) != 0);
+        boolean enabled = LineageSettings.System.getIntForUser(context.getContentResolver(),
+                LineageSettings.System.FORCE_SHOW_NAVBAR, 0, UserHandle.USER_CURRENT) != 0;
+
+        writeDisableNavkeysOption(context, enabled);
     }
 
 
@@ -670,6 +682,11 @@ public class ButtonSettings extends SettingsPreferenceFragment implements
             }
             LineageSettings.System.putInt(getActivity().getContentResolver(),
                     LineageSettings.System.SWAP_VOLUME_KEYS_ON_ROTATION, value);
+        } else if (preference == mVolumePanelOnLeft) {
+            LineageSettings.Secure.putIntForUser(getActivity().getContentResolver(),
+                    LineageSettings.Secure.VOLUME_PANEL_ON_LEFT,
+                    mVolumePanelOnLeft.isChecked() ? 1 : 0, UserHandle.USER_CURRENT);
+            return true;
         } else if (preference == mDisableNavigationKeys) {
             mDisableNavigationKeys.setEnabled(false);
             mNavigationPreferencesCat.setEnabled(false);

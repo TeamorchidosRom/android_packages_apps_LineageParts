@@ -737,7 +737,6 @@ public class SetupActionsFragment extends SettingsPreferenceFragment
         if (requestCode == NEW_TRIGGER_REQUEST_CODE) {
             mProfile = mProfileManager.getProfile(mProfile.getUuid());
             rebuildItemList();
-
         }
     }
 

@@ -20,6 +20,7 @@ import android.telephony.SubscriptionManager;
 
 import org.lineageos.lineageparts.R;
 import org.lineageos.lineageparts.profiles.actions.ItemListAdapter;
+
 import lineageos.profiles.ConnectionSettings;
 
 public class ConnectionOverrideItem extends BaseItem {

@@ -44,6 +44,7 @@ public class PowerMenuActions extends SettingsPreferenceFragment {
     private CheckBoxPreference mScreenshotPref;
     private CheckBoxPreference mAirplanePref;
     private CheckBoxPreference mUsersPref;
+    private CheckBoxPreference mBugReportPref;
     private CheckBoxPreference mLockDownPref;
 
     Context mContext;
@@ -66,6 +67,8 @@ public class PowerMenuActions extends SettingsPreferenceFragment {
                 mAirplanePref = (CheckBoxPreference) findPreference(GLOBAL_ACTION_KEY_AIRPLANE);
             } else if (action.equals(GLOBAL_ACTION_KEY_USERS)) {
                 mUsersPref = (CheckBoxPreference) findPreference(GLOBAL_ACTION_KEY_USERS);
+            } else if (action.equals(GLOBAL_ACTION_KEY_BUGREPORT)) {
+                mBugReportPref = (CheckBoxPreference) findPreference(GLOBAL_ACTION_KEY_BUGREPORT);
             } else if (action.equals(GLOBAL_ACTION_KEY_LOCKDOWN)) {
                 mLockDownPref = (CheckBoxPreference) findPreference(GLOBAL_ACTION_KEY_LOCKDOWN);
             }
@@ -99,6 +102,10 @@ public class PowerMenuActions extends SettingsPreferenceFragment {
             }
         }
 
+        if (mBugReportPref != null) {
+            mBugReportPref.setChecked(settingsArrayContains(GLOBAL_ACTION_KEY_BUGREPORT));
+        }
+
         updatePreferences();
     }
 
@@ -124,9 +131,15 @@ public class PowerMenuActions extends SettingsPreferenceFragment {
             value = mUsersPref.isChecked();
             updateUserConfig(value, GLOBAL_ACTION_KEY_USERS);
 
+        } else if (preference == mBugReportPref) {
+            value = mBugReportPref.isChecked();
+            updateUserConfig(value, GLOBAL_ACTION_KEY_BUGREPORT);
+
         } else if (preference == mLockDownPref) {
             value = mLockDownPref.isChecked();
             updateUserConfig(value, GLOBAL_ACTION_KEY_LOCKDOWN);
+            Settings.Secure.putInt(getContentResolver(),
+                    Settings.Secure.LOCKDOWN_IN_POWER_MENU, value ? 1 : 0);
 
         } else {
             return super.onPreferenceTreeClick(preference);
@@ -152,7 +165,17 @@ public class PowerMenuActions extends SettingsPreferenceFragment {
     }
 
     private void updatePreferences() {
+        boolean bugreport = Settings.Global.getInt(getContentResolver(),
+                Settings.Global.BUGREPORT_IN_POWER_MENU, 0) != 0;
 
+        if (mBugReportPref != null) {
+            mBugReportPref.setEnabled(bugreport);
+            if (bugreport) {
+                mBugReportPref.setSummary(null);
+            } else {
+                mBugReportPref.setSummary(R.string.power_menu_bug_report_disabled);
+            }
+        }
     }
 
     private void getUserConfig() {
