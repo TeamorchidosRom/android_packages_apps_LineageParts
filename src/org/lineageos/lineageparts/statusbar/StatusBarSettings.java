@@ -50,18 +50,17 @@ public class StatusBarSettings extends SettingsPreferenceFragment
     private static final String STATUS_BAR_AM_PM = "status_bar_am_pm";
     private static final String STATUS_BAR_QUICK_QS_PULLDOWN = "qs_quick_pulldown";
 
-
     private static final int PULLDOWN_DIR_NONE = 0;
     private static final int PULLDOWN_DIR_RIGHT = 1;
     private static final int PULLDOWN_DIR_LEFT = 2;
 
+
     private LineageSystemSettingListPreference mQuickPulldown;
     private LineageSystemSettingListPreference mStatusBarClock;
     private LineageSystemSettingListPreference mStatusBarAmPm;
-    private LineageSystemSettingListPreference mStatusBarBattery;
 
     private PreferenceCategory mStatusBarBatteryCategory;
-    private PreferenceCategory mStatusBarClockCategory;
+	private PreferenceCategory mStatusBarClockCategory;
 
     private static boolean sHasNotch;
 
@@ -69,11 +68,11 @@ public class StatusBarSettings extends SettingsPreferenceFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.status_bar_settings);
-
-        sHasNotch = getResources().getBoolean(
+		
+		sHasNotch = getResources().getBoolean(
                 org.lineageos.platform.internal.R.bool.config_haveNotch);
-
-        mStatusBarAmPm =
+        
+		mStatusBarAmPm =
                 (LineageSystemSettingListPreference) findPreference(STATUS_BAR_AM_PM);
         mStatusBarClock =
                 (LineageSystemSettingListPreference) findPreference(STATUS_BAR_CLOCK_STYLE);
@@ -81,8 +80,6 @@ public class StatusBarSettings extends SettingsPreferenceFragment
 
         mStatusBarClockCategory =
                 (PreferenceCategory) getPreferenceScreen().findPreference(CATEGORY_CLOCK);
-
-        mStatusBarBattery.setOnPreferenceChangeListener(this);
 
         mStatusBarBatteryCategory =
                 (PreferenceCategory) getPreferenceScreen().findPreference(CATEGORY_BATTERY);
@@ -137,7 +134,6 @@ public class StatusBarSettings extends SettingsPreferenceFragment
             mStatusBarClock.setEntries(R.array.status_bar_clock_position_entries);
             mStatusBarClock.setEntryValues(R.array.status_bar_clock_position_values);
         }
-
     }
 
     @Override
@@ -183,9 +179,6 @@ public class StatusBarSettings extends SettingsPreferenceFragment
         @Override
         public Set<String> getNonIndexableKeys(Context context) {
             final Set<String> result = new ArraySet<String>();
-
-            if (sHasNotch) {
-            }
             return result;
         }
     };
