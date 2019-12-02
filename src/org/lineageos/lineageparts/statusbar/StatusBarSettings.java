@@ -33,13 +33,11 @@ import lineageos.providers.LineageSettings;
 
 import org.lineageos.lineageparts.R;
 import org.lineageos.lineageparts.SettingsPreferenceFragment;
-import org.lineageos.lineageparts.search.BaseSearchIndexProvider;
-import org.lineageos.lineageparts.search.Searchable;
 
 import java.util.Set;
 
 public class StatusBarSettings extends SettingsPreferenceFragment
-        implements OnPreferenceChangeListener, Searchable {
+        implements OnPreferenceChangeListener { /*, Searchable {*/
 
     private static final String CATEGORY_BATTERY = "status_bar_battery_key";
     private static final String CATEGORY_CLOCK = "status_bar_clock_key";
@@ -172,14 +170,4 @@ public class StatusBarSettings extends SettingsPreferenceFragment
         return LineageSettings.System.getInt(getActivity().getContentResolver(),
                 STATUS_BAR_CLOCK_STYLE, 2);
     }
-
-    public static final Searchable.SearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =
-            new BaseSearchIndexProvider() {
-
-        @Override
-        public Set<String> getNonIndexableKeys(Context context) {
-            final Set<String> result = new ArraySet<String>();
-            return result;
-        }
-    };
 }
