@@ -37,7 +37,7 @@ import org.lineageos.lineageparts.SettingsPreferenceFragment;
 import java.util.Set;
 
 public class StatusBarSettings extends SettingsPreferenceFragment
-        implements OnPreferenceChangeListener { /*, Searchable {*/
+        implements OnPreferenceChangeListener {
 
     private static final String CATEGORY_BATTERY = "status_bar_battery_key";
     private static final String CATEGORY_CLOCK = "status_bar_clock_key";
