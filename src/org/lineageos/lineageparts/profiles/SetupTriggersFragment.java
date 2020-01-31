@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2014 The CyanogenMod Project
- *               2017 The LineageOS Project
+ *               2017-2020 The LineageOS Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,12 +36,15 @@ import org.lineageos.lineageparts.R;
 import org.lineageos.lineageparts.SettingsPreferenceFragment;
 import org.lineageos.lineageparts.PartsActivity;
 import org.lineageos.lineageparts.profiles.triggers.NfcTriggerFragment;
+import org.lineageos.lineageparts.widget.RtlCompatibleViewPager;
+import org.lineageos.lineageparts.widget.SlidingTabLayout;
 
 public class SetupTriggersFragment extends SettingsPreferenceFragment {
 
-    ViewPager mPager;
+    RtlCompatibleViewPager mPager;
     Profile mProfile;
     ProfileManager mProfileManager;
+    SlidingTabLayout mTabLayout;
     TriggerPagerAdapter mAdapter;
     boolean mNewProfileMode;
     int mPreselectedItem;
@@ -98,6 +101,7 @@ public class SetupTriggersFragment extends SettingsPreferenceFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mPager.setCurrentItem(mPreselectedItem);
+        mTabLayout.setViewPager(mPager);
     }
 
     @Override
@@ -106,7 +110,8 @@ public class SetupTriggersFragment extends SettingsPreferenceFragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_setup_triggers, container, false);
 
-        mPager = (ViewPager) root.findViewById(R.id.view_pager);
+        mPager = (RtlCompatibleViewPager) root.findViewById(R.id.view_pager);
+        mTabLayout = (SlidingTabLayout) root.findViewById(R.id.sliding_tabs);
         mAdapter = new TriggerPagerAdapter(getActivity(), getChildFragmentManager());
 
         Bundle profileArgs = new Bundle();
@@ -127,12 +132,6 @@ public class SetupTriggersFragment extends SettingsPreferenceFragment {
         }
 
         mPager.setAdapter(mAdapter);
-
-        PagerTabStrip tabs = (PagerTabStrip) root.findViewById(R.id.tabs);
-        TypedValue colorAccent = new TypedValue();
-        getContext().getTheme().resolveAttribute(com.android.internal.R.attr.colorAccent,
-                colorAccent, true);
-        tabs.setTabIndicatorColorResource(colorAccent.resourceId);
 
         if (mNewProfileMode) {
             showButtonBar(true);
