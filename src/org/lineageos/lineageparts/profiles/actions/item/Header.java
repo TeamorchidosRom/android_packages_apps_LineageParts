@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import android.support.v14.preference.R;
 import org.lineageos.lineageparts.profiles.actions.ItemListAdapter;
+import org.lineageos.lineageparts.R;
 
 public class Header implements Item {
     private final String name;
@@ -39,7 +40,7 @@ public class Header implements Item {
     public View getView(LayoutInflater inflater, View convertView, ViewGroup parent) {
         View view;
         if (convertView == null) {
-            view = inflater.inflate(R.layout.preference_category_material, parent, false);
+            view = inflater.inflate(R.layout.profiles_header, parent, false);
             // Do some initialization
         } else {
             view = convertView;
