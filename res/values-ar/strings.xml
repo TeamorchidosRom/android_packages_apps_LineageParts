@@ -19,6 +19,7 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="lineageparts_title">إعدادات LightningFastRom</string>
+    <string name="loading">تحميل</string>
     <string name="dlg_ok">موافق</string>
     <string name="cancel">إلغاء</string>
     <string name="add">إضافة</string>
