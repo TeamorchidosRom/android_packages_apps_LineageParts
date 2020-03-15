@@ -54,6 +54,7 @@ public class StatusBarSettings extends SettingsPreferenceFragment
     private static final int PULLDOWN_DIR_NONE = 0;
     private static final int PULLDOWN_DIR_RIGHT = 1;
     private static final int PULLDOWN_DIR_LEFT = 2;
+	private static final int PULLDOWN_DIR_BOTH = 3;
 
     private LineageSystemSettingListPreference mQuickPulldown;
     private LineageSystemSettingListPreference mStatusBarClock;
@@ -170,6 +171,7 @@ public class StatusBarSettings extends SettingsPreferenceFragment
                         ? R.string.status_bar_quick_qs_pulldown_summary_left
                         : R.string.status_bar_quick_qs_pulldown_summary_right));
                 break;
+			case PULLDOWN_DIR_BOTH:
         }
         mQuickPulldown.setSummary(summary);
     }

@@ -115,5 +115,4 @@
             android:summary="@string/status_bar_toggle_brightness_summary"
             android:defaultValue="false" />
     </PreferenceCategory>
-
 </PreferenceScreen>
