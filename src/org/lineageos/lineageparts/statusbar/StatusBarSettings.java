@@ -29,6 +29,7 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceScreen;
 
 import lineageos.preference.LineageSystemSettingListPreference;
+import lineageos.preference.SecureSettingSwitchPreference;
 import lineageos.providers.LineageSettings;
 
 import org.lineageos.lineageparts.R;
@@ -58,7 +59,7 @@ public class StatusBarSettings extends SettingsPreferenceFragment
 
     private LineageSystemSettingListPreference mQuickPulldown;
     private LineageSystemSettingListPreference mStatusBarClock;
-    private LineageSystemSettingListPreference mStatusBarAmPm;
+    private SecureSettingSwitchPreference mStatusBarAmPm;
     private LineageSystemSettingListPreference mStatusBarBattery;
 
     private PreferenceCategory mStatusBarBatteryCategory;
@@ -75,7 +76,7 @@ public class StatusBarSettings extends SettingsPreferenceFragment
                 org.lineageos.platform.internal.R.bool.config_haveNotch);
 
         mStatusBarAmPm =
-                (LineageSystemSettingListPreference) findPreference(STATUS_BAR_AM_PM);
+                (SecureSettingSwitchPreference) findPreference(STATUS_BAR_AM_PM);
         mStatusBarClock =
                 (LineageSystemSettingListPreference) findPreference(STATUS_BAR_CLOCK_STYLE);
         mStatusBarClock.setOnPreferenceChangeListener(this);
@@ -114,11 +115,18 @@ public class StatusBarSettings extends SettingsPreferenceFragment
         } else {
             getPreferenceScreen().addPreference(mStatusBarBatteryCategory);
         }
-
+		
+		final boolean disallowAMPM = sHasNotch;
+		
         if (DateFormat.is24HourFormat(getActivity())) {
             mStatusBarAmPm.setEnabled(false);
             mStatusBarAmPm.setSummary(R.string.status_bar_am_pm_info);
-        }
+		} else if (disallowAMPM) {
+			getPreferenceScreen().removePreference(mStatusBarAmPm);
+        } else {
+			mStatusBarAmPm.setEnabled(true);
+            mStatusBarAmPm.setSummary(R.string.status_bar_am_pm_summary);
+		}
 
         final boolean disallowCenteredClock = sHasNotch;
 
