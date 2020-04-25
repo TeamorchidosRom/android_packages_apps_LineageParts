@@ -75,24 +75,18 @@ public class StatusBarSettings extends SettingsPreferenceFragment
         sHasNotch = getResources().getBoolean(
                 org.lineageos.platform.internal.R.bool.config_haveNotch);
 
-        mStatusBarAmPm =
-                (SecureSettingSwitchPreference) findPreference(STATUS_BAR_AM_PM);
-        mStatusBarClock =
-                (LineageSystemSettingListPreference) findPreference(STATUS_BAR_CLOCK_STYLE);
+        mStatusBarAmPm = findPreference(STATUS_BAR_AM_PM);
+        mStatusBarClock = findPreference(STATUS_BAR_CLOCK_STYLE);
         mStatusBarClock.setOnPreferenceChangeListener(this);
 
-        mStatusBarClockCategory =
-                (PreferenceCategory) getPreferenceScreen().findPreference(CATEGORY_CLOCK);
+        mStatusBarClockCategory = getPreferenceScreen().findPreference(CATEGORY_CLOCK);
 
-        mStatusBarBattery =
-                (LineageSystemSettingListPreference) findPreference(STATUS_BAR_BATTERY_STYLE);
+        mStatusBarBattery = findPreference(STATUS_BAR_BATTERY_STYLE);
         mStatusBarBattery.setOnPreferenceChangeListener(this);
 
-        mStatusBarBatteryCategory =
-                (PreferenceCategory) getPreferenceScreen().findPreference(CATEGORY_BATTERY);
+        mStatusBarBatteryCategory = getPreferenceScreen().findPreference(CATEGORY_BATTERY);
 
-        mQuickPulldown =
-                (LineageSystemSettingListPreference) findPreference(STATUS_BAR_QUICK_QS_PULLDOWN);
+        mQuickPulldown = findPreference(STATUS_BAR_QUICK_QS_PULLDOWN);
         mQuickPulldown.setOnPreferenceChangeListener(this);
         updateQuickPulldownSummary(mQuickPulldown.getIntValue(0));
     }
