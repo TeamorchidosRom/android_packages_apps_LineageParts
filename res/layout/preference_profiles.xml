@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:textAppearance="?android:attr/textAppearanceListItem"
-                android:singleLine="true" />
+                android:singleLine="true"/>
 
         </LinearLayout>
 
