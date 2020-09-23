@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2014-2015 The CyanogenMod Project
- *               2017-2019 The LineageOS Project
+ *               2017-2020 The LineageOS Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import org.lineageos.lineageparts.R;
 import org.lineageos.lineageparts.SettingsPreferenceFragment;
 import org.lineageos.lineageparts.search.BaseSearchIndexProvider;
 import org.lineageos.lineageparts.search.Searchable;
+import org.lineageos.lineageparts.utils.DeviceUtils;
 
 import java.util.Set;
 
@@ -65,7 +66,7 @@ public class StatusBarSettings extends SettingsPreferenceFragment
     private PreferenceCategory mStatusBarBatteryCategory;
     private PreferenceCategory mStatusBarClockCategory;
 
-    private static boolean sHasNotch;
+    private boolean mHasNotch;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
