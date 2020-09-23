@@ -73,7 +73,7 @@ public class StatusBarSettings extends SettingsPreferenceFragment
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.status_bar_settings);
 
-        sHasNotch = getResources().getBoolean(
+        mHasNotch = getResources().getBoolean(
                 org.lineageos.platform.internal.R.bool.config_haveNotch);
 
         mStatusBarAmPm = findPreference(STATUS_BAR_AM_PM);
@@ -111,7 +111,7 @@ public class StatusBarSettings extends SettingsPreferenceFragment
             getPreferenceScreen().addPreference(mStatusBarBatteryCategory);
         }
 		
-		final boolean disallowAMPM = sHasNotch;
+		final boolean disallowAMPM = mHasNotch;
 		
         if (DateFormat.is24HourFormat(getActivity())) {
             mStatusBarAmPm.setEnabled(false);
@@ -123,7 +123,7 @@ public class StatusBarSettings extends SettingsPreferenceFragment
             mStatusBarAmPm.setSummary(R.string.status_bar_am_pm_summary);
 		}
 
-        final boolean disallowCenteredClock = sHasNotch;
+        final boolean disallowCenteredClock = mHasNotch;
 
         // Adjust status bar preferences for RTL
         if (getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
