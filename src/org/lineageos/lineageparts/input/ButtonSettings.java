@@ -94,6 +94,7 @@ public class ButtonSettings extends SettingsPreferenceFragment
     private static final String KEY_EDGE_LONG_SWIPE = "navigation_bar_edge_long_swipe";
     private static final String KEY_POWER_END_CALL = "power_end_call";
     private static final String KEY_HOME_ANSWER_CALL = "home_answer_call";
+    private static final String KEY_VOLUME_MUSIC_CONTROLS = "volbtn_music_controls";
     private static final String KEY_TORCH_LONG_PRESS_POWER_GESTURE =
             "torch_long_press_power_gesture";
     private static final String KEY_TORCH_LONG_PRESS_POWER_TIMEOUT =
@@ -413,7 +414,15 @@ public class ButtonSettings extends SettingsPreferenceFragment
             }
         }
 
-        mVolumeWakeScreen = findPreference(KEY_VOLUME_WAKE_SCREEN);
+        mVolumeWakeScreen = (SwitchPreference) findPreference(LineageSettings.System.VOLUME_WAKE_SCREEN);
+        mVolumeMusicControls = (SwitchPreference) findPreference(KEY_VOLUME_MUSIC_CONTROLS);
+
+        if (mVolumeWakeScreen != null) {
+            if (mVolumeMusicControls != null) {
+                mVolumeMusicControls.setDependency(LineageSettings.System.VOLUME_WAKE_SCREEN);
+                mVolumeWakeScreen.setDisableDependentsState(true);
+            }
+        }
 
         // Override key actions on Go devices in order to hide any unsupported features
         if (ActivityManager.isLowRamDeviceStatic()) {
